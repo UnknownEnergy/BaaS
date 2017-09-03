@@ -6,24 +6,10 @@ Users and roles are stored in an PostgreSql Database.
 
 # How to setup database:
 
-install postgre sql and define access properties in application.properties.
+Install postgre sql and define access properties in application.properties.
+Database tables are created automatically while startup of server.
 
-Create following tables for users and roles:
+# How to start up server:
 
-```sql
-CREATE TABLE users(
-   username varchar(20) NOT NULL,
-   password varchar(20) NOT NULL,
-   enabled boolean NOT NULL DEFAULT FALSE,
-   primary key(username)
-);
-
-create table user_roles (
-  user_role_id SERIAL PRIMARY KEY,
-  username varchar(20) NOT NULL,
-  role varchar(20) NOT NULL,
-  UNIQUE (username,role),
-  FOREIGN KEY (username) REFERENCES users (username)
-);
-```
+Use maven spring-boot plugin: spring-boot:run
 
