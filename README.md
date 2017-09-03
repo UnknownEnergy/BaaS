@@ -10,6 +10,7 @@ install postgre sql and define access properties in application.properties.
 
 Create following tables for users and roles:
 
+```sql
 CREATE TABLE users(
    username varchar(20) NOT NULL,
    password varchar(20) NOT NULL,
@@ -24,4 +25,5 @@ create table user_roles (
   UNIQUE (username,role),
   FOREIGN KEY (username) REFERENCES users (username)
 );
+```
 
