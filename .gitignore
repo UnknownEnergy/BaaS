@@ -23,9 +23,6 @@ hs_err_pid*
 .idea/
 IdeaProjects.iml
 baas.iml
-pom.xml
-src/main/resources/
-src/test/
 target/
 
 pom.xml.tag
