@@ -1,6 +1,7 @@
 package com.unknown_energy.baas;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -11,16 +12,23 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
+import javax.sql.DataSource;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private static String REALM = "MY_TEST_REALM";
 
+    @Qualifier("dataSource")
+    @Autowired
+    DataSource dataSource;
+
     @Autowired
     public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication().withUser("bill").password("abc123").roles("ADMIN");
-        auth.inMemoryAuthentication().withUser("tom").password("abc123").roles("USER");
+        auth.jdbcAuthentication().dataSource(dataSource)
+                .usersByUsernameQuery("select username,password, enabled from users where username=?")
+                .authoritiesByUsernameQuery("select username, role from user_roles where username=?");
     }
 
     @Override
