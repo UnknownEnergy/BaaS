@@ -1,4 +1,4 @@
-package com.unknown_energy.baas;
+package com.unknown_energy.baas.bean;
 
 public class Greeting {
 
