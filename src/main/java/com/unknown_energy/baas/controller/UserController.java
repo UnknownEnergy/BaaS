@@ -1,33 +1,39 @@
 package com.unknown_energy.baas.controller;
 
-import com.unknown_energy.baas.mapper.UserMapper;
-import com.unknown_energy.baas.bean.Greeting;
 import com.unknown_energy.baas.bean.User;
+import com.unknown_energy.baas.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 public class UserController {
 
-    private static final String template = "Hello, %s!";
-    private final AtomicLong counter = new AtomicLong();
-
     @Autowired
     private UserMapper userMapper;
 
-    @RequestMapping("/admin/users")
+    @RequestMapping("/users/add")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public void insertNewUser(@RequestBody User user) {
+        if(userMapper.checkIfUserExists(user.getUsername())== null) {
+            userMapper.insertUser(user);
+        }
+    }
+
+    @RequestMapping("/users")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<User> getAllUsers() {
-        return this.userMapper.selectAllUsers();
+        return userMapper.selectUsers();
     }
 
     @RequestMapping("/user/greeting")
-    public Greeting greetingUser(@RequestParam(value="name", defaultValue="User") String name) {
-        return new Greeting(counter.incrementAndGet(),
-                String.format(template, name));
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public String greetingUser(@RequestParam(value="name", defaultValue="User") String name) {
+        return "hello " + name;
     }
 }

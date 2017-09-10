@@ -3,13 +3,24 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.unknown_energy.baas.mapper.UserMapper">
-    <select id="selectAllUsers" resultMap="userResultMap">
-        SELECT * FROM USERS u
+    <insert id="insertUser" parameterType="com.unknown_energy.baas.bean.User" useGeneratedKeys="true">
+        INSERT INTO users (username,password,enabled)
+        VALUES (#{user.username},#{user.password},#{user.enabled})
+    </insert>
+
+    <select id="selectUsers" resultMap="userResultMap">
+        SELECT * FROM users
     </select>
+
     <resultMap id="userResultMap" type="com.unknown_energy.baas.bean.User">
         <id property="id" column="id" />
         <result property="username" column="username"/>
         <result property="password" column="password"/>
         <result property="enable" column="enable"/>
     </resultMap>
+
+    <select id="checkIfUserExists" resultType="java.lang.Long">
+        SELECT id FROM users
+        WHERE username = #{username}
+    </select>
 </mapper>
